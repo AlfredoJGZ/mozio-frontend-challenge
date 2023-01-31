@@ -1,13 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-
+import TravelForm from "./components/TravelForm";
+import Results from "./components/Results";
 const App = () => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={<h1>Fill the details of your travel below</h1>}
-      />
-      <Route path="/results" element={<h1>Your travel</h1>} />
+      <Route path="/" element={<TravelForm />} />
+      <Route path="/results" element={<Results />} />
     </Routes>
   );
 };
