@@ -1,38 +1,36 @@
-import { Link } from "react-router-dom";
-import { Card, CardContent, Typography, Box, Grid } from "@mui/material";
-import {
-  AccessAlarm,
-  ThreeDRotation,
-  LocationCity,
-  Person,
-  Event,
-} from "@mui/icons-material";
-
+import { Link, useNavigate } from "react-router-dom";
+import { Card, CardContent, Typography, Grid, Button } from "@mui/material";
+import { Person, Event, Flag, ArrowBack } from "@mui/icons-material";
 import { useSearchParams } from "react-router-dom";
 import useParamsFormat from "../hooks/useParamsFormat";
-
-const RouteDistance = () => {
-  return (
-    <>
-      <Grid item xs={4} sx={{ textAlign: "center" }}>
-        <LocationCity color="primary" fontSize={"large"} />
-        <Typography fontSize={"1rem"}>Paris</Typography>
-      </Grid>
-      <Grid item xs={4} sx={{ textAlign: "center" }} alignItems="center">
-        <Typography fontSize={"1.5rem"}>120 KM</Typography>
-      </Grid>
-      <Grid item xs={4} sx={{ textAlign: "center" }}>
-        <LocationCity color="primary" fontSize={"large"} />
-        <Typography fontSize={"1rem"}>Dijon</Typography>
-      </Grid>
-    </>
-  );
-};
+import { useCallback, useEffect, useState } from "react";
+import RouteDistance from "./RouteDistance";
 
 const Results = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const formatParams = useParamsFormat();
   const travelDetails = formatParams(searchParams);
+  const [totalDistance, setTotalDistance] = useState(0);
+  let citiesList: string[] = [];
+  citiesList.push(travelDetails.origin as string);
+  if (travelDetails.intermediate) {
+    citiesList = citiesList.concat(travelDetails.intermediate) as string[];
+  }
+  citiesList.push(travelDetails.destination as string);
+  const addDistance = useCallback((distance: number) => {
+    setTotalDistance((prev) => Number(prev + distance));
+  }, []);
+
+  useEffect(() => {
+    if (
+      !travelDetails.origin ||
+      !travelDetails.destination ||
+      !travelDetails.date
+    ) {
+      navigate("/");
+    }
+  });
 
   return (
     <Card sx={{ width: `min(90%, 30rem)` }}>
@@ -54,14 +52,34 @@ const Results = () => {
             </Typography>
           </Grid>
           <Grid container item xs={12} rowSpacing={2}>
-            <RouteDistance />
-            <RouteDistance />
-            <RouteDistance />
+            {citiesList.map((citie, index, array) => {
+              if (index < array.length - 1) {
+                return (
+                  <RouteDistance
+                    key={index}
+                    a={citie}
+                    b={array[index + 1]}
+                    addDistance={addDistance}
+                  />
+                );
+              }
+              return null;
+            })}
+          </Grid>
+          <Grid item xs={12} sx={{ textAlign: "center" }}>
+            <Flag color="primary" fontSize={"large"} />
+            <Typography color="primary" fontSize={"1.5rem"}>
+              {`${totalDistance} KM`}
+            </Typography>
+            <Typography fontSize={"1rem"}>Total distance</Typography>
           </Grid>
         </Grid>
+        <Link style={{ textDecoration: "none" }} to={`/`}>
+          <Button startIcon={<ArrowBack />} sx={{ margin: "0 auto" }}>
+            Home
+          </Button>
+        </Link>
       </CardContent>
-
-      <Link to={`/`}>Home</Link>
     </Card>
   );
 };

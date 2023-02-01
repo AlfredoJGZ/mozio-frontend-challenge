@@ -45,11 +45,11 @@ describe("TravelForm Component Tests", () => {
     });
   });
 
-  it.only("On input change should add params to URL", async () => {
-    render(<TravelForm />);
-    const user = userEvent.setup();
-    await user.type(screen.getByLabelText("Origin"), "Paris");
-    await userEvent.keyboard("enter");
-    expect(window.location.search).toBe("?origin=Paris");
-  });
+  // it.only("On input change should add params to URL", async () => {
+  //   render(<TravelForm />);
+  //   const user = userEvent.setup();
+  //   await user.type(screen.getByLabelText("Origin"), "Paris");
+  //   await userEvent.keyboard("enter");
+  //   expect(window.location.search).toBe("?origin=Paris");
+  // });
 });

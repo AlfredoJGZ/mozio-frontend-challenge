@@ -9,7 +9,6 @@ const useHandleSearch = (): ((
   const formatParams = useParamsFormat();
 
   const handleSearch = (newKey: string, newValue: string | string[]) => {
-    console.log(`calling with ${newKey} and value ${newValue}`);
     const paramsObj = formatParams(params);
     setParams(Object.assign(paramsObj, { [newKey]: newValue }));
   };

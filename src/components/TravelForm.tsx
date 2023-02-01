@@ -2,7 +2,7 @@ import { Button, Card, CardContent, Typography, Grid } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-mui";
 import React from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import useMinDate from "../hooks/useMinDate";
 import useHandleSearch from "../hooks/useHandleSearch";
 import AutocompleteCity from "./AutocompleteCity";
@@ -54,15 +54,7 @@ const TravelForm = () => {
         }, 500);
       }}
     >
-      {({
-        submitForm,
-        isSubmitting,
-        errors,
-        values,
-        touched,
-        initialValues,
-        handleChange,
-      }) => (
+      {({ errors, values, initialValues, handleChange }) => (
         <Card sx={{ width: `min(90%, 30rem)` }}>
           <CardContent>
             <Typography variant="h1" gutterBottom>
@@ -71,7 +63,6 @@ const TravelForm = () => {
             <Typography variant="h4" textAlign="center" gutterBottom>
               Fill the details of your travel below
             </Typography>
-            <Link to={"results"}>Results</Link>
             <Form>
               <Grid container rowSpacing={2} columnSpacing={1}>
                 <Grid item xs={12}>
@@ -95,8 +86,6 @@ const TravelForm = () => {
                     fullWidth
                     onInputChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       handleChange(e);
-
-                      console.log(e.target.value);
                     }}
                     error={errors.destination ? true : false}
                     helperText={errors.destination ? errors.destination : ""}
@@ -120,6 +109,7 @@ const TravelForm = () => {
                 <Grid item xs={6}>
                   <Field
                     component={TextField}
+                    className="date-input"
                     fullWidth
                     type="date"
                     label="Date"
@@ -154,10 +144,6 @@ const TravelForm = () => {
                     Object.keys(errors).length > 0
                   }
                   onClick={() => {
-                    console.log(errors, values, touched);
-                    // console.log(params);
-                    // setSubmitted(true);
-                    console.log(searchParams.toString());
                     handleSearch("passengers", String(values.passengers));
                     navigate(`/results/?${searchParams}`, { replace: true });
                   }}
